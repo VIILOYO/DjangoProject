@@ -1,0 +1,42 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="col-md-6">
+    <form action="{% url 'AddNews' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!---Заголовок--->
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">{{ form.title.label }}</label>
+            {{ form.title}}
+            {{ form.slug.errors }}
+        </div>
+        <!---Слаг--->
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">{{ form.slug.label }}</label>
+            {{ form.slug}}
+        </div>
+        {{ form.content.errors }}
+        <!---Текст новости--->
+        <div class="mb-3">
+            <label for="content" class="form-label">{{ form.content.label }}</label>
+            {{ form.content}}
+        </div>
+        {{ form.content.errors }}
+        <!---Выбор категории--->
+        <label for="categories" class="form-label">{{ form.categories.label }}</label>
+        {{ form.categories}}
+        {{ form.categories.errors }}
+        <!---Изображение--->
+        <div class="mb-3">
+            <label for="formFile" class="form-label">{{ form.image.label }}</label>
+            {{ form.image}}
+        </div>
+        {{ form.image.errors }}
+        <!---Кнопка отправки--->
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Опубликовать</button>
+        </div>
+        {{ form.non_fields_errors }}
+    </form>
+</div>
+{% endblock content %}

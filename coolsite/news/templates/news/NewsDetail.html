@@ -1,0 +1,17 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        {{ object.get_categories }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ object.title }}</h5>
+        <img src="{{ object.image.url }}" alt="" class="card-image">
+        <p class="card-text">{{ object.content }}</p>
+    </div>
+    <div class="card-footer text-muted">
+        {{ object.date_publication }}
+    </div>
+</div>
+{% endblock content %}

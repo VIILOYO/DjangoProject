@@ -1,0 +1,22 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="col-md-6">
+    {% for news in object.news_set.all %}
+            <div class="card">
+                <div class="card-header">
+                    {{ news.get_categories }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ news.title }}</h5>
+                    <img src="{{ news.image.url }}" alt="" class="card-image">
+                    <p class="card-text">{{ news.content|truncatewords:50 }}</p>
+                    <a href="{% url 'NewsDetail' news_slug=news.slug %}" class="btn btn-primary">Читать полностью</a>
+                </div>
+                <div class="card-footer text-muted">
+                    {{ news.date_publication }}
+                </div>
+            </div>
+    {% endfor %}
+</div>
+{% endblock content %}
