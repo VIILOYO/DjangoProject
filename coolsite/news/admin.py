@@ -16,7 +16,7 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'slug',
                     'date_publication', 'date_update',
                     'get_categories', 'views',
-                    'is_published']
+                    'is_published', 'comments']
     list_display_links = ['id', 'title', 'slug']
     list_editable = ['is_published']
     search_fields = ['title', 'content']

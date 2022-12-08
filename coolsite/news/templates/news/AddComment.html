@@ -1,0 +1,31 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<h3 id="form-title">Комментарий</h3>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!---Автор--->
+    <div class="mb-3">
+        <label for="author" class="form-label">{{ form.author.label }}</label>
+        {{ form.author }}
+        {{ form.author.errors }}
+    </div>
+    <!---Почта--->
+    <div class="mb-3">
+        <label for="email" class="form-label">{{ form.email.label }}</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+    </div>
+    <!---Текст--->
+    <div class="mb-3">
+        <label for="text" class="form-label">{{ form.text.label }}</label>
+        {{ form.text }}
+        {{ form.text.errors }}
+    </div>
+    <!---Кнопка отправки--->
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Опубликовать</button>
+    </div>
+    {{ form.non_field_errors }}
+</form>
+{% endblock content %}

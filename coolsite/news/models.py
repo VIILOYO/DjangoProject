@@ -6,7 +6,8 @@ from registration.models import User
 
 class Comment(models.Model):
     """Комментарии"""
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    author = models.CharField(max_length=100, verbose_name='Имя')
+    email = models.EmailField(verbose_name='Почта')
     text = models.TextField(max_length=1000, verbose_name='Текст комментария')
 
     class Meta:

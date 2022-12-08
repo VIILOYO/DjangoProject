@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import News
+from .models import Comment, News
 
 
 class NewsForm(ModelForm):
@@ -8,3 +8,10 @@ class NewsForm(ModelForm):
     class Meta:
         model = News
         fields = ['title', 'slug', 'content', 'categories', 'image']
+
+
+class CommentForm(ModelForm):
+    """Форма создания комментария"""
+    class Meta:
+        model = Comment
+        fields = ['author', 'email', 'text']

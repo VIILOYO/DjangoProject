@@ -7,20 +7,21 @@
         {% csrf_token %}
         <!---Заголовок--->
         <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">{{ form.title.label }}</label>
+            <label for="title" class="form-label">{{ form.title.label }}</label>
             {{ form.title}}
-            {{ form.slug.errors }}
+            {{ form.title.errors }}
         </div>
         <!---Слаг--->
         <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">{{ form.slug.label }}</label>
+            <label for="slug" class="form-label">{{ form.slug.label }}</label>
             {{ form.slug}}
+            {{ form.slug.errors }}
         </div>
-        {{ form.content.errors }}
         <!---Текст новости--->
         <div class="mb-3">
             <label for="content" class="form-label">{{ form.content.label }}</label>
             {{ form.content}}
+            {{ form.content.errors }}
         </div>
         {{ form.content.errors }}
         <!---Выбор категории--->
@@ -31,8 +32,8 @@
         <div class="mb-3">
             <label for="formFile" class="form-label">{{ form.image.label }}</label>
             {{ form.image}}
+            {{ form.image.errors }}
         </div>
-        {{ form.image.errors }}
         <!---Кнопка отправки--->
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Опубликовать</button>

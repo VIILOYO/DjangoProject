@@ -2,10 +2,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from .models import Category, News
-from . forms import NewsForm
+from .models import Category, Comment, News
+from . forms import CommentForm, NewsForm
 
 
 class NewsList(ListView):
@@ -64,6 +64,37 @@ class CreateNews(PermissionRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление новости'
         return context
+
+
+def create_comment(request, news_slug):
+    """Дбоавлене комментария"""
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect('NewsDetail', news_slug=news_slug)
+            except:
+                form.add_error(None ,'Ошибка добавления комментария')
+    else:
+        form = CommentForm()
+    return render(request, 'news/AddComment.html', {'form':form, 'title':'Добавление комментария'})
+
+
+# class CreateComment(CreateView):
+#     """Обработка формы новости"""
+#     permission_required = ('registration.view_User', )
+#     login_url = 'login'
+#     model = Comment
+#     fields = ['author', 'text']
+#     template_name = 'news/AddComment.html'
+#     success_url = 'HomePage'
+#
+#     def get_context_data(self, **kwargs):
+#         """Заполнение словаря context"""
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = 'Добавление комментария'
+#         return context
 
 
 def contacts(request):
