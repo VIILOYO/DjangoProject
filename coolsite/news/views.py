@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -51,8 +52,10 @@ class CategoryDetail(DetailView):
         return context
 
 
-class CreateNews(CreateView):
+class CreateNews(PermissionRequiredMixin, CreateView):
     """Обработка формы новости"""
+    permission_required = ('registration.view_User', )
+    login_url = 'login'
     form_class = NewsForm
     template_name = 'news/AddNews.html'
 

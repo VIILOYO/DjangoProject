@@ -10,13 +10,14 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'news/css/styles.css' %}">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     </head>
     <body>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
         {% block menu %}
         <!---Левая часть меню--->
-        <nav class="navbar navbar-expand-lg bg-light">
+        <nav class="navbar navbar-expand-lg" style="background-color: #F0F8FF">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'HomePage' %}"><img src="{% static 'news/images/logo.png' %}" alt=""></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,7 +39,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 {% for category in categories %}
-                                <li><a class="dropdown-item" href="{% url 'CategoryDetail' category_slug=category.slug %}">{{ category }}</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'CategoryDetail' category_slug=category.slug %}">
+                                        {{ category }} // {{ category.news_set.count }}
+                                    </a>
+                                </li>
                                 {% endfor %}
                             </ul>
                         </li>
@@ -47,9 +52,24 @@
 
        <!---Правая часть меню--->
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <!---Добавление новости только для суперюзера--->
+                        {% if request.user.is_superuser %}
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'AddNews' %}">Добавить новость</a>
                         </li>
+                        {% endif %}
+                        <!---Отображение правого меню в зависимотри от логина--->
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                <i class="far fa-user"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выход</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
                         <li class="nav-item dropdown">
                             <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#">
                                 Аутентификация
@@ -59,6 +79,7 @@
                                 <li><a class="dropdown-item" href="{% url 'login' %}">Авторизация</a></li>
                             </ul>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

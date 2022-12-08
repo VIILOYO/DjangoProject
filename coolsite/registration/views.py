@@ -51,4 +51,4 @@ def LoginPage(request):
 def LogoutUser(request):
     """Выход пользователя"""
     logout(request)
-    return redirect('login')
+    return redirect('HomePage')

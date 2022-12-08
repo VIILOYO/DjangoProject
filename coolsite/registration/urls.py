@@ -6,5 +6,5 @@ from .views import RegisterPage, LogoutUser, LoginPage
 urlpatterns = [
     path('register/', RegisterPage, name='register'),
     path('login/', LoginPage, name='login'),
-    path('logout', LogoutUser, name='logout'),
+    path('logout/', LogoutUser, name='logout'),
 ]
