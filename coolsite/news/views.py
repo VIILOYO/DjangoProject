@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import PermissionRequiredMixin
+
+from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormMixin
 from django.shortcuts import render, redirect
 
 from .models import Category, Comment, News
@@ -26,11 +29,32 @@ class NewsList(ListView):
         return News.objects.filter(is_published=True)
 
 
-class NewsDetail(DetailView):
+class NewsDetail(FormMixin, DetailView):
     """Отображение новости полностью"""
     model = News
     template_name = 'news/NewsDetail.html'
     slug_url_kwarg = 'news_slug'
+    form_class = CommentForm
+
+    def post(self, request, *args, **kwarg):
+        """Функция публикации"""
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        """Валидация формы"""
+        self.object = form.save()
+        self.object.news = self.get_object()
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_success_url(self, **kwargs):
+        """Успешная переадресация"""
+        return reverse_lazy('NewsDetail', kwargs={'news_slug': self.get_object().slug})
 
     def get_context_data(self, **kwargs):
         """Заполнение словаря context"""
@@ -55,7 +79,7 @@ class CategoryDetail(DetailView):
 class CreateNews(PermissionRequiredMixin, CreateView):
     """Обработка формы новости"""
     permission_required = ('registration.view_User', )
-    login_url = 'login'
+    login_url = 'HomePage'
     form_class = NewsForm
     template_name = 'news/AddNews.html'
 
@@ -66,35 +90,11 @@ class CreateNews(PermissionRequiredMixin, CreateView):
         return context
 
 
-def create_comment(request, news_slug):
-    """Дбоавлене комментария"""
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-                return redirect('NewsDetail', news_slug=news_slug)
-            except:
-                form.add_error(None ,'Ошибка добавления комментария')
-    else:
-        form = CommentForm()
-    return render(request, 'news/AddComment.html', {'form':form, 'title':'Добавление комментария'})
-
-
-# class CreateComment(CreateView):
-#     """Обработка формы новости"""
-#     permission_required = ('registration.view_User', )
-#     login_url = 'login'
-#     model = Comment
-#     fields = ['author', 'text']
-#     template_name = 'news/AddComment.html'
-#     success_url = 'HomePage'
-#
-#     def get_context_data(self, **kwargs):
-#         """Заполнение словаря context"""
-#         context = super().get_context_data(**kwargs)
-#         context['title'] = 'Добавление комментария'
-#         return context
+@user_passes_test(lambda u: u.is_superuser)
+def delete_comment(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    comment.delete()
+    return redirect('NewsDetail', news_slug=comment.news.slug)
 
 
 def contacts(request):

@@ -6,9 +6,12 @@ from registration.models import User
 
 class Comment(models.Model):
     """Комментарии"""
-    author = models.CharField(max_length=100, verbose_name='Имя')
-    email = models.EmailField(verbose_name='Почта')
+    news = models.ForeignKey('News', on_delete=models.CASCADE, verbose_name='Новость',
+                             null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь',
+                               null=True, blank=True)
     text = models.TextField(max_length=1000, verbose_name='Текст комментария')
+    create_date = models.DateTimeField(auto_now=True, verbose_name='Дата комментария')
 
     class Meta:
         verbose_name = 'Комментарий'
@@ -42,7 +45,6 @@ class News (models.Model):
     categories = models.ManyToManyField(Category, verbose_name='Категории')
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
-    comments = models.ForeignKey(Comment, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Комментарий')
 
     class Meta:
         verbose_name = 'Новость'

@@ -1,32 +1,63 @@
 {% extends 'news/base.html' %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header" style="background-color: #F0F8FF">
-        {{ object.get_categories }}
+<!---Сама новость--->
+<div class="news">
+    <div class="card" style="width: 97%;">
+        <div class="card-header" style="background-color: #F0F8FF">
+            {{ object.get_categories }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ object.title }}</h5>
+            <img src="{{ object.image.url }}" alt="" class="card-image">
+            <p class="card-text">{{ object.content|linebreaks }}</p>
+        </div>
+        <div class="card-footer text-muted" style="background-color: #F0F8FF">
+            {{ object.date_publication }}
+        </div>
     </div>
-    <div class="card-body">
-        <h5 class="card-title">{{ object.title }}</h5>
-        <img src="{{ object.image.url }}" alt="" class="card-image">
-        <p class="card-text">{{ object.content }}</p>
-    </div>
-    <div class="card-footer text-muted" style="background-color: #F0F8FF">
-        {{ object.date_publication }}
+    <div class="comments">
+        <!---Комментарии--->
+        <h3>Коментарии [{{ object.comment_set.all.count }}]</h3>
+        {% for comment in object.comment_set.all|dictsortreversed:'create_date' %}
+        <div class="card" style="width: 39.9rem;">
+            <div class="card-header">
+                {{ comment.author.get_full_name }}
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>{{ comment.text }}</p>
+                    <footer class="blockquote-footer">{{ comment.create_date }}</footer>
+                </blockquote>
+            </div>
+            {% if request.user.is_superuser %}
+            <!---Удаление комментария для суперюзера--->
+            <div class="delete">
+                <a class="nav-link active" aria-current="page" href="{% url 'delete_comment' comment_id=comment.id %}">
+                    [Удалить комментарий]
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <!---Добавление комментария--->
+        <div class="col-4">
+            <h3 id="form-title">Добавить комментарий</h3>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!---Текст--->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.text.label }}</label>
+                    {{ form.text }}
+                    {{ form.text.errors }}
+                </div>
+                <!---Кнопка отправки--->
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Опубликовать</button>
+                </div>
+                {{ form.non_field_errors }}
+            </form>
+        </div>
     </div>
 </div>
-<a href="{% url 'CreateComment' news_slug=object.slug %}" class="btn btn-primary">Оставить комментарий</a>
-<!---Комментарии--->
-{% for comment in object.comments %}
-<div class="card">
-    <div class="card-header">
-        {{ comment }}
-    </div>
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <p>{{ comment }}</p>
-            <footer class="blockquote-footer">{{ comment }}</footer>
-        </blockquote>
-    </div>
-</div>
-{% endfor %}
 {% endblock content %}

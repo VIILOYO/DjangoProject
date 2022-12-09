@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')
 
-    is_active = models.BooleanField(default=True, verbose_name='Заботает')
+    is_active = models.BooleanField(default=True, verbose_name='Активный')
     is_superuser = models.BooleanField(default=False, verbose_name='Супер-пользователь')
     is_staff = models.BooleanField(default=False, verbose_name='Работник')
 

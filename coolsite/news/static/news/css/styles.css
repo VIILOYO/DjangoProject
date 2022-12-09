@@ -1,10 +1,24 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Roboto', 'sans-serif';
+    font-size: 16px;
+    font-weight: 400;
+    color: black;
+    background-color: white;
+    min-width: 320px;
+    overflow-x: hidden;
+}
+
 img {
     width: 500px;
     hight: auto;
 }
 
 .card {
-    margin-top: 10px;
+    margin-top: 25px;
     margin-bottom: 25px;
 }
 
@@ -21,7 +35,6 @@ img {
     text-decoration: None;
     font-size: 24px;
     color: black;
-
 }
 
 .contacts li {
@@ -33,20 +46,17 @@ img {
     transform: scale(1.25);
 }
 
-html {
-    font-size: 16px;
-}
-
-body {
-    font-family: 'Roboto', 'sans-serif';
-    font-size: 16px;
-    font-weight: 400;
-    color: black;
-    background-color: white;
-    min-width: 320px;
-}
-
 .navbar-nav .dropdown-menu {
     right: 0;
     left: auto;
+}
+
+.news {
+    margin-left: 25px;
+}
+
+.delete {
+    margin-left: 10px;
+    width: 26%;
+    background: #FA8072;
 }

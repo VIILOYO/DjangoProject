@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="col-md-6">
-    {% for news in object.news_set.all %}
+    {% for news in object.news_set.all|dictsortreversed:'date_publication' %}
             <div class="card">
                 <div class="card-header" style="background-color: #F0F8FF">
                     {{ news.get_categories }}

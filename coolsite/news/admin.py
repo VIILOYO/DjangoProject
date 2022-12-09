@@ -16,7 +16,7 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'slug',
                     'date_publication', 'date_update',
                     'get_categories', 'views',
-                    'is_published', 'comments']
+                    'is_published',]
     list_display_links = ['id', 'title', 'slug']
     list_editable = ['is_published']
     search_fields = ['title', 'content']
@@ -29,10 +29,9 @@ admin.site.register(News, NewsAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'author', 'text']
+    list_display = ['id', 'author', 'text', 'news']
     list_display_links = ['id', 'text']
-    search_fields = ['author', 'text']
-    list_filter = ['author']
-    exclude = ['author']
+    search_fields = ['author', 'text', 'news']
+    list_filter = ['author', 'news']
 
 admin.site.register(Comment, CommentAdmin)
