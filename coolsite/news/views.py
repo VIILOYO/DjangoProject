@@ -4,18 +4,18 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, FormMixin
+from django.views.generic.edit import CreateView, FormMixin, UpdateView
 from django.shortcuts import render, redirect
 
-from .models import Category, Comment, News
-from . forms import CommentForm, NewsForm
+from .models import Comment, News
+from . forms import CategoryForm, CommentForm, NewsForm
 
 
 class NewsList(ListView):
     """Отображение новостей"""
 
     model = News
-    paginate_by = 10
+    paginate_by = 5
     template_name = 'news/HomePage.html'
 
     def get_context_data(self, **kwargs):
@@ -63,17 +63,22 @@ class NewsDetail(FormMixin, DetailView):
         return context
 
 
-class CategoryDetail(DetailView):
+class CategoryList(ListView):
     """Отображение новостей по категориям"""
-    model = Category
-    template_name = 'news/CategoryDetail.html'
-    slug_url_kwarg = 'category_slug'
+
+    model = News
+    paginate_by = 5
+    template_name = 'news/HomePage.html'
 
     def get_context_data(self, **kwargs):
         """Заполнение словаря context"""
         context = super().get_context_data(**kwargs)
-        context['title'] = context['object']
+        context['title'] = 'Главная страница'
         return context
+
+    def get_queryset(self):
+        """Фильтр записей"""
+        return News.objects.filter(is_published=True, categories__slug=self.kwargs['category_slug'])
 
 
 class CreateNews(PermissionRequiredMixin, CreateView):
@@ -90,8 +95,23 @@ class CreateNews(PermissionRequiredMixin, CreateView):
         return context
 
 
+class CreateCategory(PermissionRequiredMixin, CreateView):
+    """Обработка формы категории"""
+    permission_required = ('registration.view_User', )
+    login_url = 'HomePage'
+    form_class = CategoryForm
+    template_name = 'news/AddNews.html'
+
+    def get_context_data(self, **kwargs):
+        """Заполнение словаря context"""
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Добавление категории'
+        return context
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def delete_comment(request, comment_id):
+    """Удаление комментария"""
     comment = Comment.objects.get(pk=comment_id)
     comment.delete()
     return redirect('NewsDetail', news_slug=comment.news.slug)
@@ -101,3 +121,11 @@ def contacts(request):
     """Контакты .../contacts"""
     return render(request, 'news/contacts.html',
                   context={'title': 'Контакты'})
+
+
+def profile(request):
+    """Профиль, смысла в нем пока нет"""
+    if request.user.is_authenticated:
+        return render(request, 'news/profile.html', {'title': 'Профиль'})
+    else:
+        return redirect('HomePage')

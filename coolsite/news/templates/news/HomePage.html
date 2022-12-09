@@ -2,21 +2,55 @@
 
 {% block content %}
 <div class="col-md-6">
+    <!---Списокновостей--->
     {% for object in object_list|dictsortreversed:'date_publication' %}
-            <div class="card">
-                <div class="card-header" style="background-color: #F0F8FF">
-                    {{ object.get_categories }}
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ object.title }}</h5>
-                    <img src="{{ object.image.url }}" alt="" class="card-image">
-                    <p class="card-text">{{ object.content|truncatewords:50 }}</p>
-                    <a href="{{ object.get_absolute_url }}" class="btn btn-primary">Читать полностью</a>
-                </div>
-                <div class="card-footer text-muted" style="background-color: #F0F8FF">
-                    {{ object.date_publication }}
-                </div>
-            </div>
+    <div class="card">
+        <div class="card-header" style="background-color: #F0F8FF">
+            {{ object.get_categories }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ object.title }}</h5>
+            <img src="{{ object.image.url }}" alt="" class="card-image">
+            <p class="card-text">{{ object.content|truncatewords:50 }}</p>
+            <a href="{{ object.get_absolute_url }}" class="btn btn-primary">Читать полностью</a>
+        </div>
+        <div class="card-footer text-muted" style="background-color: #F0F8FF">
+            {{ object.date_publication }}
+        </div>
+    </div>
     {% endfor %}
+    <!---Пагинация--->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <!---Кнопка предыдущей страницы--->
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                </li>
+            {% endif %}
+            <!---Отоюражение страниц--->
+            {% for page in paginator.page_range %}
+            <!---Отоюражение текущей страницы--->
+            {% if page_obj.number == page %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ page }}</span>
+            </li>
+            <!---Отображение страниц на 2 меньше и на 2 больше нынешней--->
+            {% elif page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!---Кнопка следующей страницы--->
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
 {% endblock content %}
