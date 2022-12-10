@@ -1,5 +1,5 @@
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from registration.models import User
 
@@ -35,7 +35,7 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         """Возврат самой категории"""
-        return reverse('HomePage', kwargs={'category_slug': self.slug})
+        return reverse_lazy('CategoryDetail', kwargs={'category_slug': self.slug})
 
 
 class News (models.Model):
@@ -44,8 +44,8 @@ class News (models.Model):
     slug = models.CharField(max_length=50, unique=True, db_index=True, verbose_name='URL')
     content = models.TextField(verbose_name='Текст новости')
     image = models.ImageField(upload_to='media/%Y/%m/%d/', verbose_name='Изображение')
-    date_publication = models.DateTimeField(auto_now=True, verbose_name='Дата публикации')
-    date_update = models.DateTimeField(auto_now_add=True, verbose_name='Дата изменения')
+    date_publication = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+    date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     categories = models.ManyToManyField(Category, verbose_name='Категории')
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')

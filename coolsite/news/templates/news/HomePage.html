@@ -2,14 +2,15 @@
 
 {% block content %}
 <div class="col-md-6">
-    <!---Списокновостей--->
+    <!---Список новостей--->
     {% for object in object_list|dictsortreversed:'date_publication' %}
     <div class="card">
         <div class="card-header" style="background-color: #F0F8FF">
-            {{ object.get_categories }}
+           Категория: {{ object.get_categories }}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ object.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Просмотры: {{ object.views }}</h6>
             <img src="{{ object.image.url }}" alt="" class="card-image">
             <p class="card-text">{{ object.content|truncatewords:50 }}</p>
             <a href="{{ object.get_absolute_url }}" class="btn btn-primary">Читать полностью</a>

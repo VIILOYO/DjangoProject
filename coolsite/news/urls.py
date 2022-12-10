@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import CreateCategory, CategoryList, delete_comment, CreateNews, NewsDetail, NewsList, contacts, profile
+from .views import CreateCategory, CategoryList, delete_comment, ProfileUpdate, CreateNews, NewsDetail, NewsList, contacts, profile
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('comment_delete/<int:comment_id>/', delete_comment, name='delete_comment'),
     path('add_category', CreateCategory.as_view(), name='AddCategory'),
     path('add_news', CreateNews.as_view(), name='AddNews'),
+    path('update_profile/<int:user_id>/', ProfileUpdate.as_view(), name='ProfileUpdate')
 ]

@@ -2,3 +2,4 @@
 /.idea/
 *.pyc
 text.txt
+db.sqlite3

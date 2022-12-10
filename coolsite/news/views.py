@@ -9,6 +9,8 @@ from django.shortcuts import render, redirect
 
 from .models import Comment, News
 from . forms import CategoryForm, CommentForm, NewsForm
+from registration.models import User
+from registration.forms import CreateUserForm
 
 
 class NewsList(ListView):
@@ -62,6 +64,13 @@ class NewsDetail(FormMixin, DetailView):
         context['title'] = context['object']
         return context
 
+    def get_object(self, queryset=None):
+        """Счетчик просмотров"""
+        obj = super(NewsDetail, self).get_object(queryset=queryset)
+        obj.views +=1
+        obj.save()
+        return obj
+
 
 class CategoryList(ListView):
     """Отображение новостей по категориям"""
@@ -107,6 +116,25 @@ class CreateCategory(PermissionRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление категории'
         return context
+
+
+class ProfileUpdate(UpdateView):
+    """Обновление данных профиля"""
+    model = User
+    form = CreateUserForm
+    template_name = 'news/UpdateProfile.html'
+    pk_url_kwarg = 'user_id'
+    fields = ['first_name', 'last_name', 'email']
+
+    def get_context_data(self, **kwargs):
+        """Заполнение словаря context"""
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Профиль'
+        return context
+
+    def get_success_url(self, **kwargs):
+        """Успешная переадресация"""
+        return reverse_lazy('profile')
 
 
 @user_passes_test(lambda u: u.is_superuser)

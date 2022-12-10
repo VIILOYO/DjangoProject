@@ -10,6 +10,7 @@
         <li class="list-group-item">Последний логин: {{ request.user.last_login }}</li>
         <li class="list-group-item">Дата регистрации: {{ request.user.date_joined }}</li>
     </ul>
+    <a class="btn btn-primary" href="{% url 'ProfileUpdate' user_id=request.user.id%}" role="button">Изменить профиль</a>
 </div>
 
 {% endblock content %}

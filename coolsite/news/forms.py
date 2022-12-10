@@ -17,7 +17,7 @@ class NewsForm(ModelForm):
 
 
 class CategoryForm(ModelForm):
-    """Форма создания новости"""
+    """Форма создания категории"""
     class Meta:
         model = Category
         fields = ['name', 'slug']

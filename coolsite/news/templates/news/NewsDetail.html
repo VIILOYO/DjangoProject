@@ -5,10 +5,11 @@
 <div class="news">
     <div class="card" style="width: 97%;">
         <div class="card-header" style="background-color: #F0F8FF">
-            {{ object.get_categories }}
+            Категория: {{ object.get_categories }}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ object.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Просмотры: {{ object.views }}</h6>
             <img src="{{ object.image.url }}" alt="" class="card-image">
             <p class="card-text">{{ object.content|linebreaks }}</p>
         </div>
