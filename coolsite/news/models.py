@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse, reverse_lazy
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 
 from registration.models import User
 
@@ -35,7 +37,8 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         """Возврат самой категории"""
-        return reverse_lazy('CategoryDetail', kwargs={'category_slug': self.slug})
+        return reverse_lazy('CategoryDetail'
+                            '', kwargs={'category_slug': self.slug})
 
 
 class News (models.Model):
@@ -47,7 +50,7 @@ class News (models.Model):
     date_publication = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     categories = models.ManyToManyField(Category, verbose_name='Категории')
-    views = models.IntegerField(default=0, verbose_name='Просмотры')
+    views = models.IntegerField(default=-1, verbose_name='Просмотры')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
 
     class Meta:
@@ -65,3 +68,8 @@ class News (models.Model):
     def get_absolute_url(self):
         """Возврат самой новости"""
         return reverse('NewsDetail', kwargs={'news_slug': self.slug})
+
+@receiver(pre_delete, sender=News)
+def news_delete(sender, instance, **kwargs):
+    """Удаление изображения при удалении объекта"""
+    instance.image.delete(False)

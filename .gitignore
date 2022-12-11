@@ -3,3 +3,4 @@
 *.pyc
 text.txt
 db.sqlite3
+/media/

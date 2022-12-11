@@ -2,6 +2,7 @@
 {% load static %}
 {% load news_tags %}
 {% get_categories as categories %}
+{% get_news as news %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -101,15 +102,25 @@
 <!---Правая часть меню--->
 {% endblock menu %}
 
-<div class="row ">
-    <div class="col-md-3">
-
+<div class="row">
+    <div class="col-md-2">
+        <div class="topik">
+            {% for n in news %}
+            <div class="card">
+                <div class="card-header">
+                    {{ n }}
+                    <h6 class="card-subtitle mb-2 text-muted">Просмотры: {{ n.views }}</h6>
+                </div>
+                <a href="{{ object.get_absolute_url }}" class="btn btn-primary">Читать</a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
     {% block content %}
     {% endblock content %}
 
-    <div class="col-md-3">
+    <div class="col-md-2">
 
     </div>
 </div>

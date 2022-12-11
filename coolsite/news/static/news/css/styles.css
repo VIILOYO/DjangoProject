@@ -35,28 +35,28 @@ img {
     padding-left: 30px;
 }
 
+.contacts {
+    margin-top: 20px;
+}
+
 .contacts a{
     text-decoration: None;
     font-size: 24px;
     color: black;
 }
 
-.contacts li {
-    list-style-type: None;
-    transition: 1s;
+.contacts a:hover{
+    color: #778899;
 }
 
-.contacts li:hover{
-    transform: scale(1.25);
+.contacts li {
+    list-style-type: None;
 }
+
 
 .navbar-nav .dropdown-menu {
     right: 0;
     left: auto;
-}
-
-.news {
-    margin-left: 25px;
 }
 
 .delete {
@@ -68,4 +68,13 @@ img {
 .btn {
     margin: 10px;
     margin: 10px;
+}
+
+.topik {
+    margin-top: 30px;
+    margin-left: 15px;
+}
+
+.topil btn {
+    width: 20px;
 }
